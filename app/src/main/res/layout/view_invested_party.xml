@@ -1,0 +1,64 @@
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.monsalachai.calculatip.ui.InvestedPartyView"
+    >
+
+<EditText
+    android:id="@+id/name_entry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/name_entry_hint"
+    android:gravity="center"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
+
+<RadioGroup
+android:id="@+id/radio_group"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="center"
+app:layout_constraintTop_toBottomOf="@id/name_entry" >
+
+    <RadioButton
+        android:id="@+id/percent_fifteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_15_percent"/>
+
+    <RadioButton
+        android:id="@+id/percent_eighteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_18_percent"/>
+
+    <RadioButton
+        android:id="@+id/percent_twenty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_20_percent"/>
+
+    <RadioButton
+        android:id="@+id/percent_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_other_percent"/>
+
+    </RadioGroup>
+
+    <EditText
+    android:id="@+id/percent_other_entry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:hint="@string/percent_other_entry_hint"
+    android:inputType="numberDecimal"
+    android:visibility="gone"
+    app:layout_constraintTop_toBottomOf="@id/radio_group" />
+
+</merge>
