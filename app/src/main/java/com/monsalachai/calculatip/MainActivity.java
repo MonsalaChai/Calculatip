@@ -18,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // The total view at the top of the main view uses view_invested_party to
+        // keep things consistent, but the 'name' aspect of that view isn't relevant to
+        // the total report, so hide it.
+        findViewById(R.id.total_view).findViewById(R.id.name_entry).setVisibility(View.GONE);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,58 +7,186 @@
     tools:context="com.monsalachai.calculatip.ui.InvestedPartyView"
     >
 
-<EditText
-    android:id="@+id/name_entry"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="@string/name_entry_hint"
-    android:gravity="center"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    />
-
-<RadioGroup
-android:id="@+id/radio_group"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="horizontal"
-android:gravity="center"
-app:layout_constraintTop_toBottomOf="@id/name_entry" >
-
-    <RadioButton
-        android:id="@+id/percent_fifteen"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/name_entry"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_15_percent"/>
+        android:hint="@string/name_entry_hint"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-    <RadioButton
-        android:id="@+id/percent_eighteen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_18_percent"/>
+    <!-- Visual separator here? -->
 
-    <RadioButton
-        android:id="@+id/percent_twenty"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/portion"
         android:layout_height="wrap_content"
-        android:text="@string/label_20_percent"/>
+        android:layout_width="match_parent"
+        android:inputType="numberDecimal"
+        android:hint="@string/portion_entry_hint"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/name_entry"
+        />
 
-    <RadioButton
-        android:id="@+id/percent_other"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_other_percent"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/portion" >
+
+        <RadioButton
+            android:id="@+id/percent_fifteen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_15_percent"/>
+
+        <RadioButton
+            android:id="@+id/percent_eighteen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_18_percent"/>
+
+        <RadioButton
+            android:id="@+id/percent_twenty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_20_percent"/>
+
+        <RadioButton
+            android:id="@+id/percent_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_other_percent"/>
 
     </RadioGroup>
 
     <EditText
-    android:id="@+id/percent_other_entry"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:hint="@string/percent_other_entry_hint"
-    android:inputType="numberDecimal"
-    android:visibility="gone"
-    app:layout_constraintTop_toBottomOf="@id/radio_group" />
+        android:id="@+id/percent_other_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/percent_other_entry_hint"
+        android:inputType="numberDecimal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/radio_group" />
+
+    <!-- Report views here (things like tip, total, rounded tip, rounded percentage. -->
+    <LinearLayout
+        android:id="@+id/tip_report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/percent_other_entry">
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="@string/label_tip" />
+
+        <TextView
+            android:id="@+id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_report_value"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/total_report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tip_report_layout">
+
+        <TextView
+            android:id="@id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="@string/label_total" />
+
+        <TextView
+            android:id="@id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="@string/default_report_value"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rounded_tip_report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/total_report_layout">
+
+        <TextView
+            android:id="@id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="@string/label_rounded_tip" />
+
+        <TextView
+            android:id="@id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_report_value"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rounded_total_report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/rounded_tip_report_layout">
+
+        <TextView
+            android:id="@id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="@string/label_rounded_total" />
+
+        <TextView
+            android:id="@id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_report_value"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rounded_percent_report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/rounded_total_report_layout">
+
+        <TextView
+            android:id="@id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="@string/label_rounded_percent" />
+
+        <TextView
+            android:id="@id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_report_value"/>
+
+    </LinearLayout>
 
 </merge>
