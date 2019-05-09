@@ -1,18 +1,28 @@
 package com.monsalachai.calculatip;
 
 import android.app.AlertDialog;
+import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import com.monsalachai.calculatip.model.Database;
+import com.monsalachai.calculatip.model.entities.Participant;
+import com.monsalachai.calculatip.ui.ParticipantAdapter;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +36,60 @@ public class MainActivity extends AppCompatActivity {
         // the total report, so hide it.
         findViewById(R.id.total_view).findViewById(R.id.name_entry).setVisibility(View.GONE);
 
+        // create database handle.
+        database = Room.databaseBuilder(this, Database.class, "main_db")
+                .allowMainThreadQueries()   // Not likely to make any queries that would lag UI thread.
+                .build();
+
+        // load data from persistence (e.g. we're resuming).
+        List<Participant> participants = database.getStoredParticipants();
+
+        // create participant adapter.
+        final ParticipantAdapter adapter = new ParticipantAdapter(participants);
+        adapter.setEventListener(new ParticipantAdapter.OnDataStateChangeListener() {
+            @Override
+            public void onParticipantUpdate(Participant participant) {
+                database.participantDao().update(participant);
+            }
+        });
+
+        // locate the RecyclerView and assign its adapter.
+        ((RecyclerView)findViewById(R.id.recycler)).setAdapter(adapter);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                // Launch a dialog that prompts the user to enter the new participants
+                // name and portion.
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                final View dialogView = view.inflate(MainActivity.this, R.layout.dialog_new_participant, null);
+
+                builder.setMessage("New Participant")
+                        .setView(dialogView)
+                        .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Create the new Participant object, send it to Adapter's internal
+                                // list, and put it in persistence.
+                                Participant participant = new Participant();
+
+                                participant.setName(((EditText)dialogView.findViewById(R.id.name_entry)).getText().toString());
+
+                                try {
+                                    participant.setPortion(Float.parseFloat(((EditText) dialogView.findViewById(R.id.portion_entry)).getText().toString()));
+                                }
+                                catch (NumberFormatException e) {
+                                    participant.setPortion(0);
+                                }
+
+                                adapter.addParticipant(participant);
+                                participant.setUid(database.participantDao().insert(participant));
+                            }
+                        })
+                        .setNegativeButton("Cancel", null);
+
+                builder.create().show();
             }
         });
     }
