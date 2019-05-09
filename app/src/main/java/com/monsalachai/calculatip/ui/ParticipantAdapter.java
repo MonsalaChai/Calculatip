@@ -14,7 +14,10 @@ import android.widget.TextView;
 import com.monsalachai.calculatip.R;
 import com.monsalachai.calculatip.model.entities.Participant;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -30,12 +33,16 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
                 float rounded_tip = rounded_total - p.getPortion();
                 float rounded_percentage = rounded_tip / p.getPortion();
 
+                NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+                formatter.setRoundingMode(RoundingMode.HALF_UP);
+                formatter.setMaximumFractionDigits(2);
+
                 // apply to widgets.
-                ((TextView)this.itemView.findViewById(R.id.tip_report_layout).findViewById(R.id.value)).setText(Float.toString(tip));
-                ((TextView)this.itemView.findViewById(R.id.total_report_layout).findViewById(R.id.value)).setText(Float.toString(total));
-                ((TextView)this.itemView.findViewById(R.id.rounded_total_report_layout).findViewById(R.id.value)).setText(Float.toString(rounded_total));
-                ((TextView)this.itemView.findViewById(R.id.rounded_tip_report_layout).findViewById(R.id.value)).setText(Float.toString(rounded_tip));
-                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value)).setText(Float.toString(rounded_percentage));
+                ((TextView)this.itemView.findViewById(R.id.tip_report_layout).findViewById(R.id.value)).setText(formatter.format(tip));
+                ((TextView)this.itemView.findViewById(R.id.total_report_layout).findViewById(R.id.value)).setText(formatter.format(total));
+                ((TextView)this.itemView.findViewById(R.id.rounded_total_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_total));
+                ((TextView)this.itemView.findViewById(R.id.rounded_tip_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_tip));
+                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_percentage));
             }
         }
     }
