@@ -42,7 +42,7 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
                 ((TextView)this.itemView.findViewById(R.id.total_report_layout).findViewById(R.id.value)).setText(formatter.format(total));
                 ((TextView)this.itemView.findViewById(R.id.rounded_total_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_total));
                 ((TextView)this.itemView.findViewById(R.id.rounded_tip_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_tip));
-                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_percentage));
+                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value)).setText(String.format("%.2f%%", rounded_percentage * 100));
             }
         }
     }
