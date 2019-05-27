@@ -38,11 +38,17 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
                 formatter.setMaximumFractionDigits(2);
 
                 // apply to widgets.
-                ((TextView)this.itemView.findViewById(R.id.tip_report_layout).findViewById(R.id.value)).setText(formatter.format(tip));
-                ((TextView)this.itemView.findViewById(R.id.total_report_layout).findViewById(R.id.value)).setText(formatter.format(total));
-                ((TextView)this.itemView.findViewById(R.id.rounded_total_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_total));
-                ((TextView)this.itemView.findViewById(R.id.rounded_tip_report_layout).findViewById(R.id.value)).setText(formatter.format(rounded_tip));
-                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value)).setText(String.format("%.2f%%", rounded_percentage * 100));
+                ((TextView)this.itemView.findViewById(R.id.tip_report_layout)
+                        .findViewById(R.id.value)).setText(formatter.format(tip));
+                ((TextView)this.itemView.findViewById(R.id.total_report_layout)
+                        .findViewById(R.id.value)).setText(formatter.format(total));
+                ((TextView)this.itemView.findViewById(R.id.rounded_total_report_layout)
+                        .findViewById(R.id.value)).setText(formatter.format(rounded_total));
+                ((TextView)this.itemView.findViewById(R.id.rounded_tip_report_layout)
+                        .findViewById(R.id.value)).setText(formatter.format(rounded_tip));
+                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout)
+                        .findViewById(R.id.value)).setText(String.format(Locale.getDefault(),
+                        "%.2f%%", rounded_percentage * 100));
             }
         }
     }
@@ -115,7 +121,8 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
         Participant p = participants.get(position);
 
         ((EditText) holder.itemView.findViewById(R.id.name_entry)).setText(p.getName());
-        ((EditText) holder.itemView.findViewById(R.id.portion)).setText(Float.toString(p.getPortion()));
+
+        ((EditText) holder.itemView.findViewById(R.id.portion)).setText(String.format("%.2f", p.getPortion()));
 
         // set the active radio button based on participant.getTipPercentage():
         RadioButton rbtn;
