@@ -15,9 +15,93 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <!-- For when there are no participants (will need to hide name) -->
     <com.monsalachai.calculatip.ui.InvestedPartyView
+        android:id="@+id/ipv"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/label"/>
+
+    <!-- For when there are participants, should strive to have a smaller vertical footprint -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/reduced_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/ipv">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"/>
+
+        <!-- Total entry (value will be passed from IPV to here and back when necessary.-->
+        <EditText
+            android:id="@+id/reduced_portion_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- remaining unallocated portion-->
+        <TextView
+            android:id="@+id/remaining_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_remaining"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reduced_portion_entry"/>
+
+        <TextView
+            android:id="@+id/remaining_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/reduced_portion_entry"
+            app:layout_constraintStart_toEndOf="@id/remaining_label"
+            app:layout_constraintEnd_toStartOf="@id/guide"/>
+
+        <!-- Total tip, so far -->
+        <TextView
+            android:id="@+id/total_tip_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_tip"
+            app:layout_constraintStart_toEndOf="@id/guide"
+            app:layout_constraintTop_toBottomOf="@id/reduced_portion_entry" />
+
+        <TextView
+            android:id="@+id/total_tip_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/total_tip_label"
+            app:layout_constraintTop_toBottomOf="@id/reduced_portion_entry"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- total final value. -->
+        <TextView
+            android:id="@+id/final_value_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_final_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/remaining_label"/>
+
+        <TextView
+            android:id="@+id/final_value_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/final_value_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/remaining_value"/>
+
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

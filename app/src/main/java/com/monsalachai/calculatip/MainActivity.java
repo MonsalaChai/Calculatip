@@ -90,6 +90,16 @@ public class MainActivity extends AppCompatActivity {
                         .setNegativeButton("Cancel", null);
 
                 builder.create().show();
+
+                if (findViewById(R.id.total_view).findViewById(R.id.ipv).getVisibility() == View.VISIBLE) {
+                    // just added something, so hide the IPV and swap to the reduced view.
+                    findViewById(R.id.total_view).findViewById(R.id.ipv).setVisibility(View.GONE);
+                    findViewById(R.id.total_view).findViewById(R.id.reduced_layout).setVisibility(View.VISIBLE);
+
+                    // transfer the primary portion value.
+                    String value = ((EditText) findViewById(R.id.total_view).findViewById(R.id.ipv).findViewById(R.id.portion)).getText().toString();
+                    ((EditText) findViewById(R.id.total_view).findViewById(R.id.reduced_portion_entry)).setText(value);
+                }
             }
         });
     }

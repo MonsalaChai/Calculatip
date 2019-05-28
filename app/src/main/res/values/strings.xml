@@ -13,5 +13,7 @@
     <string name="label_rounded_total">Rounded Total</string>
     <string name="label_rounded_tip">Rounded Tip</string>
     <string name="label_rounded_percent">Rounded Percentage</string>
+    <string name="label_remaining">Remaining:</string>
+    <string name="label_final_value">Final value:</string>
     <string name="default_report_value">0.0</string>
 </resources>

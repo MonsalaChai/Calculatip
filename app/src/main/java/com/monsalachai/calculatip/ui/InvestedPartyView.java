@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -106,6 +107,7 @@ public class InvestedPartyView extends ConstraintLayout {
             public void afterTextChanged(Editable s) {
                 if (listener != null)
                     listener.onPortionChanged(Float.parseFloat(s.toString()));
+                else Log.d("mesalu", "No listener bound for that action");
             }
         });
 
