@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
         // keep things consistent, but the 'name' aspect of that view isn't relevant to
         // the total report, so hide it.
         findViewById(R.id.total_view).findViewById(R.id.name_entry).setVisibility(View.GONE);
+
+        // because the name entry is gone, we'll want to change the start constraint of that
+        // portion entry to parent, rather than name_entry.
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone( (ConstraintLayout) findViewById(R.id.total_view).findViewById(R.id.ipv));
+        constraintSet.connect(R.id.portion, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        constraintSet.applyTo((ConstraintLayout) findViewById(R.id.total_view).findViewById(R.id.ipv));
 
         // create database handle.
         database = Room.databaseBuilder(this, Database.class, "main_db")

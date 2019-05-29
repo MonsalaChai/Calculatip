@@ -7,15 +7,23 @@
     tools:context="com.monsalachai.calculatip.ui.InvestedPartyView"
     >
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".667"/>
+
     <EditText
         android:id="@+id/name_entry"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/name_entry_hint"
         android:gravity="center"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
         />
 
     <!-- Visual separator here? -->
@@ -23,11 +31,13 @@
     <EditText
         android:id="@+id/portion"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:inputType="numberDecimal"
         android:hint="@string/portion_entry_hint"
         android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/name_entry"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
     <RadioGroup
