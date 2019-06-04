@@ -16,6 +16,7 @@ import com.monsalachai.calculatip.model.entities.Participant;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +38,15 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
     public ParticipantAdapter(List<Participant> participants) {
         this.participants = participants;
         listener = null;
+    }
+
+    public List<Participant> getDataSet() {
+        return participants;
+    }
+
+    public void clear() {
+        participants = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public void setEventListener(OnDataStateChangeListener listener) {
@@ -123,4 +133,5 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
     public int getItemCount() {
         return participants.size();
     }
+
 }

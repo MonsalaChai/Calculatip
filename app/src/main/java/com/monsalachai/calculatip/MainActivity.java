@@ -32,6 +32,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     Database database;
+    ParticipantAdapter participantAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
         List<Participant> participants = database.getStoredParticipants();
 
         // create participant adapter.
-        final ParticipantAdapter adapter = new ParticipantAdapter(participants);
-        adapter.setEventListener(new ParticipantAdapter.OnDataStateChangeListener() {
+        participantAdapter = new ParticipantAdapter(participants);
+        participantAdapter.setEventListener(new ParticipantAdapter.OnDataStateChangeListener() {
             @Override
             public void onParticipantUpdate(Participant participant) {
                 database.participantDao().update(participant);
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // locate the RecyclerView and assign its adapter.
-        ((RecyclerView)findViewById(R.id.recycler)).setAdapter(adapter);
+        ((RecyclerView)findViewById(R.id.recycler)).setAdapter(participantAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                                     participant.setPortion(0);
                                 }
 
-                                adapter.addParticipant(participant);
+                                participantAdapter.addParticipant(participant);
                                 participant.setUid(database.participantDao().insert(participant));
                             }
                         })
@@ -206,6 +207,19 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id)
         {
+            case R.id.action_clear_all:
+                if (database != null) {
+                    for (Participant p : participantAdapter.getDataSet())
+                        database.participantDao().remove(p);
+                }
+
+                else {
+                    Log.e("MainAcitivity", "No reference to database object!?");
+                }
+
+                participantAdapter.clear();
+                return true;
+
             case R.id.action_settings_menu:
                 // Open settings menu, where people can:
                 // 1. Set app color
