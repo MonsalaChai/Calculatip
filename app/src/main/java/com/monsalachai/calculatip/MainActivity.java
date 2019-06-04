@@ -11,17 +11,24 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.monsalachai.calculatip.model.Database;
+import com.monsalachai.calculatip.model.entities.BasicInfo;
 import com.monsalachai.calculatip.model.entities.Participant;
+import com.monsalachai.calculatip.ui.InvestedPartyView;
 import com.monsalachai.calculatip.ui.ParticipantAdapter;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     Database database;
@@ -50,7 +57,76 @@ public class MainActivity extends AppCompatActivity {
                 .allowMainThreadQueries()   // Not likely to make any queries that would lag UI thread.
                 .build();
 
-        // load data from persistence (e.g. we're resuming).
+        // Load basic info back from persistence.
+        final BasicInfo basicInfo = database.getStoredData();
+
+        // Set up callbacks (notably in total_view) to keep basicInfo updated.
+        ((InvestedPartyView) findViewById(R.id.total_view).findViewById(R.id.ipv)).setEventListener(new InvestedPartyView.OnInvestedPartyStateChangeListener() {
+            @Override
+            public void onTipChanged(float tip) {
+                basicInfo.setStoredTip(tip);
+                database.basicInfoDao().update(basicInfo);
+            }
+
+            @Override
+            public void onNameChanged(String name) {
+            // don't care.
+            }
+
+            @Override
+            public void onPortionChanged(float portion) {
+                basicInfo.setStoredPortion(portion);
+                database.basicInfoDao().update(basicInfo);
+            }
+        });
+
+        ((EditText) findViewById(R.id.reduced_portion_entry)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                float value = 0;
+                try {
+                    value = Float.parseFloat(s.toString());
+                }
+                catch (NumberFormatException e) {}
+
+                basicInfo.setStoredPortion(value);
+                database.basicInfoDao().update(basicInfo);
+            }
+        });
+
+        // now that callbacks are set up, restore values to
+        // the controls (if necessary)
+        if (basicInfo.getStoredPortion() != 0) {
+            ((EditText) findViewById(R.id.reduced_portion_entry))
+                    .setText(String.format(Locale.getDefault(), "%.2f", basicInfo.getStoredPortion()));
+            ((EditText) findViewById(R.id.total_view).findViewById(R.id.ipv).findViewById(R.id.portion))
+                    .setText(String.format(Locale.getDefault(), "%.2f", basicInfo.getStoredPortion()));
+        }
+
+        // now restore tip percentage in total_view's IPV.
+        int radioId = (basicInfo.getStoredTip() == 0.15f) ? R.id.percent_fifteen :
+                (basicInfo.getStoredTip() == 0.18f) ? R.id.percent_eighteen :
+                        (basicInfo.getStoredTip() == 0.2f) ? R.id.percent_twenty : R.id.percent_other;
+
+        ((RadioButton) findViewById(R.id.total_view).findViewById(radioId)).setChecked(true);
+
+        if (radioId == R.id.percent_other) {
+            // copy value as string into the percent_other_entry view.
+            ((EditText) findViewById(R.id.total_view).findViewById(R.id.percent_other_entry))
+                    .setText(String.format(Locale.getDefault(), "%.2f", basicInfo.getStoredTip()));
+        }
+
+        // Load particpants from persistence.
         List<Participant> participants = database.getStoredParticipants();
 
         // create participant adapter.
