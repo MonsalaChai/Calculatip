@@ -25,32 +25,6 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             super(view);
         }
 
-        void updateReports(Participant p) {
-            if (p.getPortion() != 0 && p.getTipPercentage() != 0) {
-                float tip = p.getPortion() * p.getTipPercentage();
-                float total = p.getPortion() + tip;
-                float rounded_total = (float)Math.ceil(total);
-                float rounded_tip = rounded_total - p.getPortion();
-                float rounded_percentage = rounded_tip / p.getPortion();
-
-                NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-                formatter.setRoundingMode(RoundingMode.HALF_UP);
-                formatter.setMaximumFractionDigits(2);
-
-                // apply to widgets.
-                ((TextView)this.itemView.findViewById(R.id.tip_report_layout)
-                        .findViewById(R.id.value)).setText(formatter.format(tip));
-                ((TextView)this.itemView.findViewById(R.id.total_report_layout)
-                        .findViewById(R.id.value)).setText(formatter.format(total));
-                ((TextView)this.itemView.findViewById(R.id.rounded_total_report_layout)
-                        .findViewById(R.id.value)).setText(formatter.format(rounded_total));
-                ((TextView)this.itemView.findViewById(R.id.rounded_tip_report_layout)
-                        .findViewById(R.id.value)).setText(formatter.format(rounded_tip));
-                ((TextView)this.itemView.findViewById(R.id.rounded_percent_report_layout)
-                        .findViewById(R.id.value)).setText(String.format(Locale.getDefault(),
-                        "%.2f%%", rounded_percentage * 100));
-            }
-        }
     }
 
     public interface OnDataStateChangeListener {
@@ -90,7 +64,6 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             public void onTipChanged(float tip) {
                 Participant p = participants.get(vh.getAdapterPosition());
                 p.setTipPercentage(tip);
-                vh.updateReports(p);
                 if (listener != null)
                     listener.onParticipantUpdate(p);
             }
@@ -107,7 +80,6 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             public void onPortionChanged(float portion) {
                 Participant p = participants.get(vh.getAdapterPosition());
                 p.setPortion(portion);
-                vh.updateReports(p);
                 if (listener != null)
                     listener.onParticipantUpdate(p);
             }
@@ -143,7 +115,8 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
         }
         rbtn.setChecked(true);
 
-        holder.updateReports(p);
+        // do the report fields need updating too?
+
     }
 
     @Override

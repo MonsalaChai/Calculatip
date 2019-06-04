@@ -11,10 +11,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.monsalachai.calculatip.R;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class InvestedPartyView extends ConstraintLayout {
+    private float    tipValue;
+    private EditText nameEntry;
+    private EditText portionEntry;
+    private TextView tipView;
+    private TextView totalView;
+    private TextView roundedTipView;
+    private TextView roundedTotalView;
+    private TextView roundedPercentageView;
 
     public interface OnInvestedPartyStateChangeListener {
         void onTipChanged(float tip);
@@ -48,6 +61,15 @@ public class InvestedPartyView extends ConstraintLayout {
         // Inflate the base view.
         inflate(getContext(), R.layout.view_invested_party, this);
 
+        // assign view members.
+        nameEntry = findViewById(R.id.name_entry);
+        portionEntry = findViewById(R.id.portion);
+        tipView = findViewById(R.id.tip_report_layout).findViewById(R.id.value);
+        totalView = findViewById(R.id.total_report_layout).findViewById(R.id.value);
+        roundedTipView = findViewById(R.id.rounded_tip_report_layout).findViewById(R.id.value);
+        roundedTotalView = findViewById(R.id.rounded_total_report_layout).findViewById(R.id.value);
+        roundedPercentageView = findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value);
+
         RadioGroup radioGroup = findViewById(R.id.radio_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -56,14 +78,25 @@ public class InvestedPartyView extends ConstraintLayout {
                 if (checkedId == R.id.percent_other) {
                     // show the edit text.
                     editText.setVisibility(View.VISIBLE);
+                    // set tip value to the current value in the editText.
+                    try {
+                        tipValue = Float.parseFloat(editText.getText().toString());
+                    }
+                    catch (NumberFormatException e) {
+                        tipValue = 0;
+                    }
+                    updateFields();
 
                 }
                 else {
                     // hide the edit text.
                     editText.setVisibility(View.GONE);
+                    // get the new tip value.
+                    tipValue = (checkedId == R.id.percent_fifteen) ? 0.15f : (checkedId == R.id.percent_eighteen) ? 0.18f : 0.2f;
                     // call listener callback.
                     if (listener != null)
-                        listener.onTipChanged((checkedId == R.id.percent_fifteen) ? 0.15f : (checkedId == R.id.percent_eighteen) ? 0.18f : 0.2f);
+                        listener.onTipChanged(tipValue);
+                    updateFields();
                 }
 
                 editText.addTextChangedListener(new TextWatcher() {
@@ -79,13 +112,18 @@ public class InvestedPartyView extends ConstraintLayout {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (listener != null) {
-                            try {
-                                listener.onTipChanged(Float.parseFloat(s.toString()) / 100);
-                            } catch (NumberFormatException e) {
-                                listener.onTipChanged(0f);
-                            }
+                        Log.d("mesalu", "other text edit value changed.");
+                        try {
+                            tipValue = Float.parseFloat(s.toString()) / 100;
+
+                        } catch (NumberFormatException e) {
+                            tipValue = 0;
                         }
+
+                        if (listener != null)
+                            listener.onTipChanged(tipValue);
+
+                        updateFields();
                     }
                 });
             }
@@ -108,6 +146,7 @@ public class InvestedPartyView extends ConstraintLayout {
                 if (listener != null)
                     listener.onPortionChanged(Float.parseFloat(s.toString()));
                 else Log.d("mesalu", "No listener bound for that action");
+                updateFields();
             }
         });
 
@@ -133,6 +172,45 @@ public class InvestedPartyView extends ConstraintLayout {
         // Set the default clicked button
         ((RadioButton) radioGroup.findViewById(getDefaultRadioSelection())).setChecked(true);
 
+    }
+
+    protected void updateFields() {
+        // get field contents
+        float portion;
+        float tip = tipValue;
+        try {
+            portion = Float.parseFloat(portionEntry.getText().toString());
+        }
+        catch (NumberFormatException e) {
+            portion = 0;
+        }
+        // pass on to other override.
+        updateFields(portion, tip);
+    }
+
+    protected void updateFields(float portion, float tip_percent) {
+        float tip = portion * tip_percent;
+        float total = portion + tip;
+        float rounded_total = (float)Math.ceil(total);
+        float rounded_tip = rounded_total - portion;
+
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
+        formatter.setMaximumFractionDigits(2);
+
+        // apply to the report views.
+        tipView.setText(formatter.format(tip));
+        totalView.setText(formatter.format(total));
+        roundedTotalView.setText(formatter.format(rounded_total));
+        roundedTipView.setText(formatter.format(rounded_tip));
+
+        if (portion != 0 && rounded_tip != 0) {
+            float rounded_percentage = rounded_tip / portion;
+            roundedPercentageView.setText(String.format(Locale.getDefault(), "%.2f%%", rounded_percentage * 100));
+        }
+        else
+            roundedPercentageView.setText("0.0%");
     }
 
     protected int getDefaultRadioSelection() {
