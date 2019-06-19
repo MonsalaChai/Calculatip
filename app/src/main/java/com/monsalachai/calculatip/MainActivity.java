@@ -139,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Determine which mode total_view should be in.
+        handleTotalViewVisibility();
+
         // locate the RecyclerView and assign its adapter.
         ((RecyclerView)findViewById(R.id.recycler)).setAdapter(participantAdapter);
 
@@ -247,5 +250,28 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null);
         builder.create().show();
 
+    }
+
+    private void handleTotalViewVisibility() {
+        if (participantAdapter == null) return; // can't yet determine visibility.
+
+        InvestedPartyView ipv = (InvestedPartyView) findViewById(R.id.total_view).findViewById(R.id.ipv);
+        ConstraintLayout reducedView = findViewById(R.id.total_view).findViewById(R.id.reduced_layout);
+
+        if (participantAdapter.getItemCount() > 0) {
+            // ensure reduced view is visible, and ipv is not.
+            if (reducedView.getVisibility() != View.VISIBLE)
+                reducedView.setVisibility(View.VISIBLE);
+            if (ipv.getVisibility() != View.GONE)
+                reducedView.setVisibility(View.GONE);
+        }
+
+        else {
+            // ensure ipv is visible, and reduced view is not.
+            if (reducedView.getVisibility() != View.GONE)
+                reducedView.setVisibility(View.GONE);
+            if (ipv.getVisibility() != View.VISIBLE)
+                reducedView.setVisibility(View.VISIBLE);
+        }
     }
 }
