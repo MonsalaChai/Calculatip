@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             if (reducedView.getVisibility() != View.VISIBLE)
                 reducedView.setVisibility(View.VISIBLE);
             if (ipv.getVisibility() != View.GONE)
-                reducedView.setVisibility(View.GONE);
+                ipv.setVisibility(View.GONE);
         }
 
         else {
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             if (reducedView.getVisibility() != View.GONE)
                 reducedView.setVisibility(View.GONE);
             if (ipv.getVisibility() != View.VISIBLE)
-                reducedView.setVisibility(View.VISIBLE);
+                ipv.setVisibility(View.VISIBLE);
         }
     }
 }
