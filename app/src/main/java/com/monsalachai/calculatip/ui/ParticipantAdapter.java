@@ -49,6 +49,17 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
         notifyDataSetChanged();
     }
 
+    public float getTotalContributions ()
+    {
+        float sumCont = 0;
+
+        for (Participant subjectA: participants)
+        {
+            sumCont = sumCont + subjectA.getPortion();
+        }
+
+        return sumCont;
+    }
     public void setEventListener(OnDataStateChangeListener listener) {
         this.listener = listener;
     }

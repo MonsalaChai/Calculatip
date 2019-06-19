@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.monsalachai.calculatip.model.Database;
 import com.monsalachai.calculatip.model.entities.BasicInfo;
@@ -27,6 +28,8 @@ import com.monsalachai.calculatip.model.entities.Participant;
 import com.monsalachai.calculatip.ui.InvestedPartyView;
 import com.monsalachai.calculatip.ui.ParticipantAdapter;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -136,6 +139,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onParticipantUpdate(Participant participant) {
                 database.participantDao().update(participant);
+                float totalParty = participantAdapter.getTotalContributions();
+                TextView totalRemainingView = findViewById(R.id.total_view).findViewById(R.id.remaining_value);
+                float totalRemaining = basicInfo.getStoredPortion() - totalParty;
+
+                NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+                formatter.setRoundingMode(RoundingMode.HALF_UP);
+                formatter.setMaximumFractionDigits(2);
+
+                totalRemainingView.setText(formatter.format(totalRemaining));
             }
         });
 
