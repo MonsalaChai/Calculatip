@@ -24,6 +24,7 @@ public class Participant {
     @ColumnInfo
     private int position;
 
+
     public Participant(long uid, String name, float portion, boolean round, float tipPercentage) {
         this.uid = uid;
         this.name = name;
@@ -86,4 +87,5 @@ public class Participant {
     public void setPosition(int position) {
         this.position = position;
     }
+
 }

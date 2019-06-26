@@ -82,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 basicInfo.setStoredPortion(portion);
                 database.basicInfoDao().update(basicInfo);
             }
+
+            @Override
+            public void onRoundingModeChanged(boolean mode) {
+
+            }
         });
 
         ((EditText) findViewById(R.id.reduced_portion_entry)).addTextChangedListener(new TextWatcher() {
@@ -148,6 +153,16 @@ public class MainActivity extends AppCompatActivity {
                 formatter.setMaximumFractionDigits(2);
 
                 totalRemainingView.setText(formatter.format(totalRemaining));
+
+                // Now do the same for the tip, and sum total.
+
+                float totalTip = participantAdapter.getTotalTips();
+
+                TextView totalTipView = findViewById(R.id.total_view).findViewById(R.id.total_tip_value);
+                totalTipView.setText(formatter.format(totalTip));
+
+                TextView sumTotalView = findViewById(R.id.total_view).findViewById(R.id.final_value_value);
+                sumTotalView.setText(formatter.format(totalTip + basicInfo.getStoredPortion()));
             }
         });
 

@@ -8,9 +8,11 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.monsalachai.calculatip.R;
@@ -28,11 +30,13 @@ public class InvestedPartyView extends ConstraintLayout {
     private TextView roundedTipView;
     private TextView roundedTotalView;
     private TextView roundedPercentageView;
+    private Switch   useRoundedSwitch;
 
     public interface OnInvestedPartyStateChangeListener {
         void onTipChanged(float tip);
         void onNameChanged(String name);
         void onPortionChanged(float portion);
+        void onRoundingModeChanged(boolean mode);
     }
 
     private OnInvestedPartyStateChangeListener listener;
@@ -69,6 +73,7 @@ public class InvestedPartyView extends ConstraintLayout {
         roundedTipView = findViewById(R.id.rounded_tip_report_layout).findViewById(R.id.value);
         roundedTotalView = findViewById(R.id.rounded_total_report_layout).findViewById(R.id.value);
         roundedPercentageView = findViewById(R.id.rounded_percent_report_layout).findViewById(R.id.value);
+        useRoundedSwitch = findViewById(R.id.switch_use_rounded);
 
         RadioGroup radioGroup = findViewById(R.id.radio_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -171,6 +176,16 @@ public class InvestedPartyView extends ConstraintLayout {
 
         // Set the default clicked button
         ((RadioButton) radioGroup.findViewById(getDefaultRadioSelection())).setChecked(true);
+
+        // Add an listener to the use rounded tip switch.
+        Switch useRoundedSwitch = findViewById(R.id.switch_use_rounded);
+        useRoundedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (listener != null)
+                    listener.onRoundingModeChanged(isChecked);
+            }
+        });
 
     }
 

@@ -60,6 +60,20 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
 
         return sumCont;
     }
+
+    public float getTotalTips() {
+        float sum = 0f;
+        for (Participant p: participants) {
+            float tip = p.getPortion() * p.getTipPercentage();
+            if (p.isRound())
+                    tip = (float) Math.ceil(tip);
+
+            sum += tip;
+        }
+
+        return sum;
+    }
+
     public void setEventListener(OnDataStateChangeListener listener) {
         this.listener = listener;
     }
@@ -101,6 +115,14 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             public void onPortionChanged(float portion) {
                 Participant p = participants.get(vh.getAdapterPosition());
                 p.setPortion(portion);
+                if (listener != null)
+                    listener.onParticipantUpdate(p);
+            }
+
+            @Override
+            public void onRoundingModeChanged(boolean mode) {
+                Participant p = participants.get(vh.getAdapterPosition());
+                p.setRound(mode);
                 if (listener != null)
                     listener.onParticipantUpdate(p);
             }
